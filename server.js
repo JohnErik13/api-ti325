@@ -1,8 +1,8 @@
 require('dotenv').config(); //carrega as variaveis do arquivo .env para o process.env
 const express = require('express');
+const cpfController=require('./cpfController.controller');
 const app = express();
 app.use(express.json());
-
 
 // rota ou endpoint
 app.get('/', (req, res) => {
@@ -16,8 +16,6 @@ app.get('/ping', (req, res) => {
 
 app.post('/usuario', (req, res) => {
     const { nome, idade } = req.body;
-
-
 
     // Trnasformações
     // 1. Converte o nome para MAISCULAS
@@ -44,7 +42,8 @@ app.post('/usuario', (req, res) => {
     })
 })
 
-
+// rota POST chamando diretamente a função do Controller recebeCpf
+app.post('/cpf', cpfController.recebeCPF);
 
 
 
