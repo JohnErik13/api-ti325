@@ -23,7 +23,7 @@ function validarCpfSimples(cpfOriginal) {
     }
 
     // 3. Verifica se todos os dígitos são iguais (ex: 111.111.111-11) é invalido
-    const todosIguais = /^(\d)\1{10}\$/.test(apenasNumeros);
+    const todosIguais = /^(\d)\1{10}$/.test(apenasNumeros);
     if (todosIguais) {
         return { valido: false, motivo: 'CPF com todos os dígitos iguais é inválidos.'};
     }
@@ -44,6 +44,19 @@ const cpfController = {
     recebeCPF: (req, res) =>{
         const { cpf } = req.body
 
+        //  AQUI ESTA A LIGAÇÃO COM A FUNÇÃO DE VALIDAÇÃO
+        const resultado = validarCpfSimples(cpf)
+
+        // Se o CPF for inválido (por exemplo, "111.111.111-11")
+        if (!resultado.valido){
+            return res.status(400).json({
+                sucesso: false,
+                mensagem: resultado.motivo,
+                cpfEnviado: cpf
+            })
+        }
+        // Se for válido
+
         return res.json({
             sucesso: true,
             mensagem: 'CPF recebido no Controller com sucesso!',
@@ -63,7 +76,13 @@ const cpfController = {
                 mensagem: resultado.motivo
             })
         }
+         return res.json({
+            sucesso: true,
+            mensagem: resultado.motivo,
+            cpfEnviado: cpf
+        });
     }
+    
 
 }
 module.exports = cpfController; 
